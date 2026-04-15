@@ -1,0 +1,6 @@
+touch .gitignore
+venv/
+__pycache__/
+*.pyc
+uploads/
+output/
