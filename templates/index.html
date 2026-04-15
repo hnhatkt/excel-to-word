@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Excel → Word Tool</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            margin-top: 5px;
+            padding: 8px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: green;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Excel → Word</h2>
+
+    <form id="form" action="/generate" method="post" enctype="multipart/form-data">
+
+        <label>📊 File Excel</label>
+        <input type="file" name="excel" id="excelInput" required>
+
+        <div id="sheetBox" style="display:none;">
+            <label>📑 Chọn Sheet</label>
+            <select name="sheet_name" id="sheetSelect"></select>
+        </div>
+
+        <input type="hidden" name="excel_path" id="excelPath">
+
+        <label>📝 File Word Template</label>
+        <input type="file" name="template" required>
+
+        <button type="submit">🚀 Generate</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('excelInput').addEventListener('change', function() {
+
+    let formData = new FormData();
+    formData.append('excel', this.files[0]);
+
+    fetch('/get-sheets', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        let select = document.getElementById('sheetSelect');
+        select.innerHTML = '';
+
+        data.sheets.forEach(sheet => {
+            let option = document.createElement('option');
+            option.value = sheet;
+            option.text = sheet;
+            select.appendChild(option);
+        });
+
+        document.getElementById('sheetBox').style.display = 'block';
+        document.getElementById('excelPath').value = data.path;
+    });
+});
+</script>
+
+</body>
+</html>
