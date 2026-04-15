@@ -22,9 +22,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        h2 {
-            text-align: center;
-        }
+        h2 { text-align: center; }
 
         label {
             display: block;
@@ -39,17 +37,20 @@
         }
 
         button {
-            margin-top: 20px;
+            margin-top: 15px;
             width: 100%;
             padding: 12px;
-            background: green;
-            color: white;
             border: none;
             border-radius: 6px;
             cursor: pointer;
+            color: white;
         }
+
+        #btn { background: green; }
+        #resetBtn { background: red; }
     </style>
 </head>
+
 <body>
 
 <div class="box">
@@ -58,24 +59,28 @@
     <form id="form" action="/generate" method="post" enctype="multipart/form-data">
 
         <label>📊 File Excel</label>
-        <input type="file" name="excel" id="excelInput" required>
+        <input type="file" name="excel" id="excelInput" accept=".xlsx,.xls" required>
 
         <div id="sheetBox" style="display:none;">
             <label>📑 Chọn Sheet</label>
             <select name="sheet_name" id="sheetSelect"></select>
         </div>
 
-        <input type="hidden" name="excel_path" id="excelPath">
+        <input type="hidden" name="temp_path" id="tempPath">
 
         <label>📝 File Word Template</label>
-        <input type="file" name="template" required>
+        <input type="file" name="template" accept=".docx" required>
 
-        <button type="submit">🚀 Generate</button>
+        <button id="btn" type="submit">🚀 Generate</button>
+        <button type="button" id="resetBtn">🔄 Reset</button>
     </form>
 </div>
 
 <script>
-document.getElementById('excelInput').addEventListener('change', function() {
+// =====================
+// LOAD SHEETS
+// =====================
+document.getElementById('excelInput').addEventListener('change', function () {
 
     let formData = new FormData();
     formData.append('excel', this.files[0]);
@@ -86,6 +91,11 @@ document.getElementById('excelInput').addEventListener('change', function() {
     })
     .then(res => res.json())
     .then(data => {
+
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
 
         let select = document.getElementById('sheetSelect');
         select.innerHTML = '';
@@ -98,8 +108,32 @@ document.getElementById('excelInput').addEventListener('change', function() {
         });
 
         document.getElementById('sheetBox').style.display = 'block';
-        document.getElementById('excelPath').value = data.path;
+        document.getElementById('tempPath').value = data.temp_path;
     });
+});
+
+
+// =====================
+// RESET FORM
+// =====================
+document.getElementById('resetBtn').addEventListener('click', function () {
+
+    document.getElementById('form').reset();
+    document.getElementById('sheetBox').style.display = 'none';
+    document.getElementById('sheetSelect').innerHTML = '';
+    document.getElementById('tempPath').value = '';
+
+    document.getElementById('btn').innerText = "🚀 Generate";
+    document.getElementById('btn').disabled = false;
+});
+
+
+// =====================
+// SUBMIT LOADING
+// =====================
+document.getElementById('form').addEventListener('submit', function () {
+    document.getElementById('btn').innerText = "Đang xử lý...";
+    document.getElementById('btn').disabled = true;
 });
 </script>
 
