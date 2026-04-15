@@ -93,10 +93,10 @@ def generate():
 
             # =========================
             # FILE NAME RULE
-            # so_hop_dong + goi_dich_vu + ten_san
+            # so_hop_dong + ten_kem_theo + ten_san
             # =========================
             so_hop_dong = context.get('so_hop_dong', '')
-            goi_dich_vu = context.get('goi_dich_vu', '')
+            goi_dich_vu = context.get('ten_kem_theo', '')
             ten_san = context.get('ten_san', '')
 
             parts = []
@@ -104,7 +104,7 @@ def generate():
             if so_hop_dong:
                 parts.append(so_hop_dong)
             if goi_dich_vu:
-                parts.append(goi_dich_vu)
+                parts.append(ten_kem_theo)
             if ten_san:
                 parts.append(ten_san)
 

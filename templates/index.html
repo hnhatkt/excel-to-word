@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Excel → Word Tool</title>
-    <p style="text-align:center; margin-top:5px; color:#888; font-size:13px;">
-    Vui lòng chuẩn bị file Excel và Word để sử dụng
-    </p>
 
     <style>
         body {
@@ -21,11 +18,21 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            width: 400px;
+            width: 420px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        h2 { text-align: center; }
+        h2 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .desc {
+            text-align: center;
+            color: gray;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
 
         label {
             display: block;
@@ -40,24 +47,69 @@
         }
 
         button {
-            margin-top: 15px;
+            margin-top: 12px;
             width: 100%;
             padding: 12px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             color: white;
+            font-size: 14px;
         }
 
-        #btn { background: green; }
-        #resetBtn { background: red; }
+        #btn {
+            background: green;
+        }
+
+        #resetBtn {
+            background: red;
+        }
+
+        #sheetBox {
+            margin-top: 10px;
+        }
     </style>
 </head>
 
 <body>
 
 <div class="box">
+
     <h2>Excel → Word</h2>
+
+    <div class="desc">
+        Vui lòng chuẩn bị file Excel theo cấu trúc:
+
+        <br><br>
+
+        - Hàng 1: tiêu đề cột (không dấu, viết liền bằng dấu "_")
+        <br>
+        Ví dụ: ten_san, dia_chi, so_hop_dong...
+
+        <br><br>
+
+        - Hàng 2 trở đi: dữ liệu, mỗi dòng tương ứng 1 file Word
+
+        <br><br>
+
+        - File excel phải có 3 cột:
+        <b>so_hop_dong</b>, <b>ten_kem_theo</b>, <b>ten_san</b>
+
+        <br><br>
+        - Tên file Word sẽ được tạo theo:
+        <br>
+        <code>so_hop_dong + ten_kem_theo + ten_san.docx</code>
+
+        <br><br>
+
+        - Trong file Word template sử dụng biến:
+        <br>
+        <div style="background:#f4f6f9;padding:10px;border-radius:8px;font-family:monospace;">
+            &#123;&#123; ten_san &#125;&#125;
+            &#123;&#123; so_hop_dong &#125;&#125;
+            &#123;&#123; ten_kem_theo &#125;&#125;
+        </div>
+    </div>
 
     <form id="form" action="/generate" method="post" enctype="multipart/form-data">
 
@@ -76,10 +128,12 @@
 
         <button id="btn" type="submit">🚀 Generate</button>
         <button type="button" id="resetBtn">🔄 Reset</button>
+
     </form>
 </div>
 
 <script>
+
 // =====================
 // LOAD SHEETS
 // =====================
@@ -135,9 +189,11 @@ document.getElementById('resetBtn').addEventListener('click', function () {
 // SUBMIT LOADING
 // =====================
 document.getElementById('form').addEventListener('submit', function () {
+
     document.getElementById('btn').innerText = "Đang xử lý...";
     document.getElementById('btn').disabled = true;
 });
+
 </script>
 
 </body>
